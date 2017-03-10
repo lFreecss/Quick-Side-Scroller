@@ -64,11 +64,11 @@ struct globals
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
 	SDL_Texture* background = nullptr;
-	SDL_Texture* ship = nullptr;
+	SDL_Texture* nya = nullptr;
 	SDL_Texture* shot = nullptr;
 	int background_width = 0;
-	int ship_x = 0;
-	int ship_y = 0;
+	int nya_x = 0;
+	int nya_y = 0;
 	int last_shot = 0;
 	bool fire, up, down, left, right;
 	Mix_Music* music = nullptr;
@@ -89,7 +89,7 @@ void Start()
 	// Load image lib --
 	IMG_Init(IMG_INIT_PNG);
 	g.background = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/background.png"));
-	g.ship = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/ship.png"));
+	g.nya = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/nya.png"));
 	g.shot = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/shot.png"));
 	SDL_QueryTexture(g.background, nullptr, nullptr, &g.background_width, nullptr);
 
@@ -101,8 +101,8 @@ void Start()
 	g.fx_shoot = Mix_LoadWAV("assets/laser.wav");
 
 	// Init other vars --
-	g.ship_x = 100;
-	g.ship_y = SCREEN_HEIGHT / 2;
+	g.nya_x = 100;
+	g.nya_y = 150;
 	g.fire = g.up = g.down = g.left = g.right = false;
 }
 
@@ -114,7 +114,7 @@ void Finish()
 	Mix_CloseAudio();
 	Mix_Quit();
 	SDL_DestroyTexture(g.shot);
-	SDL_DestroyTexture(g.ship);
+	SDL_DestroyTexture(g.nya);
 	SDL_DestroyTexture(g.background);
 	IMG_Quit();
 	SDL_DestroyRenderer(g.renderer);
@@ -163,10 +163,10 @@ bool CheckInput()
 void MoveStuff()
 {
 	// Calc new ship position
-	if(g.up) g.ship_y -= SHIP_SPEED;
-	if(g.down) g.ship_y += SHIP_SPEED;
-	if(g.left) g.ship_x -= SHIP_SPEED;
-	if(g.right)	g.ship_x += SHIP_SPEED;
+	if(g.up) g.nya_y -= SHIP_SPEED;
+	if(g.down) g.nya_y += SHIP_SPEED;
+	if(g.left) g.nya_x -= SHIP_SPEED;
+	if(g.right)	g.nya_x += SHIP_SPEED;
 
 	if(g.fire)
 	{
@@ -177,8 +177,8 @@ void MoveStuff()
 			g.last_shot = 0;
 
 		g.shots[g.last_shot].alive = true;
-		g.shots[g.last_shot].x = g.ship_x + 32;
-		g.shots[g.last_shot].y = g.ship_y;
+		g.shots[g.last_shot].x = g.nya_x + 32;
+		g.shots[g.last_shot].y = g.nya_y;
 		++g.last_shot;
 	}
 
@@ -211,8 +211,8 @@ void Draw()
 	SDL_RenderCopy(g.renderer, g.background, nullptr, &target);
 
 	// Draw player's ship --
-	target = { g.ship_x, g.ship_y, 64, 64 };
-	SDL_RenderCopy(g.renderer, g.ship, nullptr, &target);
+	target = { g.nya_x, g.nya_y, 150, 64 };
+	SDL_RenderCopy(g.renderer, g.nya, nullptr, &target);
 
 	// Draw lasers --
 	for(int i = 0; i < NUM_SHOTS; ++i)
