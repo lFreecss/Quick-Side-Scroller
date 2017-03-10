@@ -101,8 +101,8 @@ void Start()
 	g.fx_shoot = Mix_LoadWAV("assets/laser.wav");
 
 	// Init other vars --
-	g.nya_x = 100;
-	g.nya_y = 150;
+	g.nya_x = 240;
+	g.nya_y = 230;
 	g.fire = g.up = g.down = g.left = g.right = false;
 }
 
