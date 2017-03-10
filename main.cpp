@@ -49,7 +49,7 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define SCROLL_SPEED 5
-#define SHIP_SPEED 3
+#define SHIP_SPEED 10
 #define NUM_SHOTS 32
 #define SHOT_SPEED 5
 
@@ -163,11 +163,30 @@ bool CheckInput()
 void MoveStuff()
 {
 	// Calc new ship position
-	if(g.up) g.nya_y -= SHIP_SPEED;
-	if(g.down) g.nya_y += SHIP_SPEED;
-	if(g.left) g.nya_x -= SHIP_SPEED;
-	if(g.right)	g.nya_x += SHIP_SPEED;
-
+	if (g.up) {
+		g.nya_y -= SHIP_SPEED;
+		if (g.nya_y < 0) {
+			g.nya_y = 0;
+		}
+	}
+	if (g.down) {
+		g.nya_y += SHIP_SPEED;
+		if (g.nya_y > (SCREEN_WIDTH - 220)) {
+			g.nya_y = (SCREEN_WIDTH - 220);
+		}
+	}
+	if (g.left) {
+		g.nya_x -= SHIP_SPEED;
+		if (g.nya_x < 0) {
+			g.nya_x = 0;
+		}
+	}
+	if (g.right) {
+		g.nya_x += SHIP_SPEED;
+		if (g.nya_x > (SCREEN_WIDTH - 160)) {
+			g.nya_x = (SCREEN_WIDTH - 160);
+		}
+	}
 	if(g.fire)
 	{
 		Mix_PlayChannel(-1, g.fx_shoot, 0);
@@ -177,7 +196,7 @@ void MoveStuff()
 			g.last_shot = 0;
 
 		g.shots[g.last_shot].alive = true;
-		g.shots[g.last_shot].x = g.nya_x + 32;
+		g.shots[g.last_shot].x = g.nya_x + 130;
 		g.shots[g.last_shot].y = g.nya_y;
 		++g.last_shot;
 	}
