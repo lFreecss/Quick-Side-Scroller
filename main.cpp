@@ -66,10 +66,14 @@ struct globals
 	SDL_Texture* background = nullptr;
 	SDL_Texture* nya = nullptr;
 	SDL_Texture* shot = nullptr;
+	SDL_Texture* ship2 = nullptr;
 	int background_width = 0;
 	int nya_x = 0;
 	int nya_y = 0;
+	int ship2_x = 0;
+	int ship2_y = 0;
 	int last_shot = 0;
+	bool comp1 = false;
 	bool fire, up, down, left, right;
 	Mix_Music* music = nullptr;
 	Mix_Chunk* fx_shoot = nullptr;
@@ -89,6 +93,7 @@ void Start()
 	// Load image lib --
 	IMG_Init(IMG_INIT_PNG);
 	g.background = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/background.png"));
+	g.ship2 = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/ship2.png"));
 	g.nya = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/nya.png"));
 	g.shot = SDL_CreateTextureFromSurface(g.renderer, IMG_Load("assets/shot.png"));
 	SDL_QueryTexture(g.background, nullptr, nullptr, &g.background_width, nullptr);
@@ -101,7 +106,7 @@ void Start()
 	g.fx_shoot = Mix_LoadWAV("assets/laser.wav");
 
 	// Init other vars --
-	g.nya_x = 240;
+	g.nya_x = 230;
 	g.nya_y = 230;
 	g.fire = g.up = g.down = g.left = g.right = false;
 }
@@ -162,6 +167,19 @@ bool CheckInput()
 // ----------------------------------------------------------------
 void MoveStuff()
 {
+	g.ship2_x = 480;
+	if (g.comp1 == false) {
+		g.ship2_y += 5;
+		if (g.ship2_y == 400) {
+			g.comp1 = true;
+		}
+	}
+	if (g.comp1 == true) {
+		g.ship2_y -= 5;
+		if (g.ship2_y == 0) {
+			g.comp1 = false;
+		}
+	}
 	// Calc new ship position
 	if (g.up) {
 		g.nya_y -= SHIP_SPEED;
@@ -228,7 +246,8 @@ void Draw()
 	SDL_RenderCopy(g.renderer, g.background, nullptr, &target);
 	target.x += g.background_width;
 	SDL_RenderCopy(g.renderer, g.background, nullptr, &target);
-
+	target = { g.ship2_x, g.ship2_y, 64, 64 };
+	SDL_RenderCopy(g.renderer, g.ship2, nullptr, &target);
 	// Draw player's ship --
 	target = { g.nya_x, g.nya_y, 150, 64 };
 	SDL_RenderCopy(g.renderer, g.nya, nullptr, &target);
